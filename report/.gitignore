@@ -1,0 +1,13 @@
+*.aux
+*.log
+*.out
+*.bbl
+*.bcf
+*.blg
+*.run.xml
+*.toc
+*.nlo
+*.pygtex
+*.pygstyle
+
+.nfs*

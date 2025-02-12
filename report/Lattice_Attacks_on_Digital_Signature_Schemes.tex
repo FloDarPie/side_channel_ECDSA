@@ -1,0 +1,435 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, filecolor=magenta, urlcolor=cyan,}
+\urlstyle{same}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[version=4]{mhchem}
+\usepackage{stmaryrd}
+\usepackage{bbold}
+
+\title{LATTICE ATTACKS ON DIGITAL SIGNATURE SCHEMES }
+
+\author{N.A. HOWGRAVE-GRAHAM AND N.P. SMART}
+\date{}
+
+
+%New command to display footnote whose markers will always be hidden
+\let\svthefootnote\thefootnote
+\newcommand\blfootnotetext[1]{%
+  \let\thefootnote\relax\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \let\thefootnote\svthefootnote%
+}
+
+%Overriding the \footnotetext command to hide the marker if its value is `0`
+\let\svfootnotetext\footnotetext
+\renewcommand\footnotetext[2][?]{%
+  \if\relax#1\relax%
+    \ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+  \else%
+    \if?#1\ifnum\value{footnote}=0\blfootnotetext{#2}\else\svfootnotetext{#2}\fi%
+    \else\svfootnotetext[#1]{#2}\fi%
+  \fi
+}
+
+\begin{document}
+\maketitle
+See discussions, stats, and author profiles for this publication at:\\
+\href{https://www.researchgate.net/publication/225240686}{https://www.researchgate.net/publication/225240686}
+
+\section*{Lattice Attacks on Digital Signature Schemes}
+Article in Designs Codes and Cryptography • August 2001\\
+DOI: 10.1023/A:1011214926272\\
+CITATIONS\\
+198\\
+2 authors, including:\\
+Nick Howgrave-Graham\\
+University of Bath
+
+47 PUBLICATIONS 2,813 CITATIONS\\
+SEE PROFILE
+
+\section*{Lattice Attacks on Digital Signature Schemes}
+N.A. Howgrave-Graham, N.P. Smart
+
+MCS Department\\
+HPL Laboratories Bristol\\
+HPL-1999-90\\
+3rd August, 1999*\\
+digital signatures, We describe a lattice attack on the Digital Signature lattices Algorithm (DSA) when used to sign many messages, $m_{i}$, under the assumption that a proportion of the bits of each of the associated ephemeral keys, $y_{i}$, can be recovered by alternative techniques.
+
+\footnotetext{\begin{itemize}
+  \item Internal Accession Date Only\\[0pt]
+  Copyright Hewlett-Packard Company 1999
+\end{itemize}
+}
+
+\begin{abstract}
+We describe a lattice attack on the Digital Signature Algorithm (DSA) when used to sign many messages, $m_{i}$, under the assumption that a proportion of the bits of each of the associated ephemeral keys, $y_{i}$, can be recovered by alternative techniques.
+\end{abstract}
+
+\section*{1. Introduction}
+Lattice attacks have recently been used to attack RSA schemes under various additional assumptions, such as low exponent versions of RSA, or factoring the modulus when a certain portion of the bits of $p$ are known in advance. Many of these attacks have derived from ground breaking ideas of Coppersmith on how one can use the LLL algorithm [9] to solve univariate and bivariate modular polynomial equations. For more details on this and related matters the reader should consult, [2], [4], [5], [7] and [8].
+
+ElGamal signatures, see [6], are based on the assumption that one has a finite abelian group, $G$, for which it is computationally infeasible to solve the discrete logarithm and Diffie-Hellman problems. ElGamal type signature schemes have been deployed and standardized in the Digital Signature Algorithm, DSA, and its elliptic curve variant, EC-DSA.
+
+In the above mentioned protocols, based on the discrete logarithm problem, Alice publishes the group $G$, along with its cardinality $p=\# G$, which we assume to be a large prime of over 160 bits in length. Alice also publishes an element $g \in G$, and $h=g^{x}$ for some private integer $x$. In what follows $f$ is any mapping from $G$ to $\mathbb{Z} / p \mathbb{Z}$, that is almost bijective, and which is also assumed to be public knowledge.
+
+For Alice to sign a message $m \in \mathbb{Z} / p \mathbb{Z}$ she computes $b$ such that
+
+
+\begin{equation*}
+m \equiv b y-x f\left(g^{y}\right) \quad(\bmod p) \tag{1}
+\end{equation*}
+
+
+for some randomly chosen $y \in\{1, \ldots, p-1\}$, and sends Bob the triple $\left(m, g^{y}, b\right)$. The integer $y$ is usually referred to as the ephemeral key, since it needs to be different for each message and is only required for the short space of time it requires to sign the message.
+
+Bob may verify that
+
+$$
+g^{m b^{-1}} h^{f\left(g^{y}\right) b^{-1}}=g^{y}
+$$
+
+without ever knowing the quantity $y$ (clearly knowledge of $y$ immediately leads to the discovery of $x$ ). There are various other signing/verifying equations that one could use, but they are all roughly of the same form and our attack will apply to any scheme which uses an auxiliary equation such as Equation (1).
+
+In this paper we analyze the situation where Alice signs many messages, $m_{i}$, using her fixed private key $x$ and the ephemeral keys $y_{i}$. The messages Alice will
+
+\footnotetext{Key words and phrases. digital signatures, lattices.
+}
+sign will not be chosen by the adversary. However, we do assume that a few of the bits of the random quantities $y_{i}$ are also known. We do not address how these few bits of $y_{i}$ are to be determined, it may be due to a weak random number generator, a timing attack or using some probe on the device used to generate the signatures.
+
+Under the above assumption we show that the remaining bits of the $y_{i}$ may be discovered in essentially polynomial time. However, we observe that when the number of known bits of each $y_{i}$ is very small, the increasing size of the lattices we need to consider make the method increasingly impractical. Notice that if we manage to recover any one of the ephemeral keys then we recover the private key, $x$, and are so able to impersonate the valid user.
+
+Our method resembles some of the techniques used in [3] in that it uses a polynomial time algorithm of Babai [1] to find a lattice vector which is close to a non-lattice vector.
+
+\section*{2. BASIC STRATEGY}
+Assume we intercept $h$ messages, then we have the following set of equations
+
+$$
+m_{i}-b_{i} y_{i}+x f_{i} \equiv 0 \quad(\bmod p)
+$$
+
+for $1 \leq i \leq h$, where $f_{i}=f\left(g^{y_{i}}\right)$ and only $x$ and $y_{i}$ are unknown.\\
+Rearranging these equations we obtain equations of the form $y_{i}+C_{i} x+D_{i} \equiv 0$ $(\bmod p)$, for some integers $C_{i}, D_{i}$. If we know no information about any bits of $x$ then we can eliminate $x$ and obtain $h-1$ equations of the form $y_{i}+C_{i}^{\prime} y_{h}+D_{i}^{\prime} \equiv 0$ $(\bmod p)$ for some other integers $C_{i}^{\prime}$ and $D_{i}^{\prime}$. On the other hand if we do know some information about $x$ then we may as well use it.
+
+In either case we obtain $n=h$ or $h-1$ equations of the form
+
+
+\begin{equation*}
+y_{i}+A_{i} y_{0}+B_{i} \equiv 0 \quad(\bmod p) \text { for } i=1, \ldots, n \tag{2}
+\end{equation*}
+
+
+for some given integers $A_{i}, B_{i} \in[0, \ldots, p-1]$, where $y_{0}=x$ or $y_{0}=y_{h}$. It is on these equations that our attack will be mounted and not the discrete logarithm problem from which a single instance of the protocol derives its security.
+
+Suppose that we do not know a certain set of (contiguous) bits of the $y_{i}$, for $i=0, \ldots, n$. In other words, for $i=0, \ldots, n$, we have
+
+$$
+y_{i}=z_{i}^{\prime}+2^{\lambda_{i}} z_{i}+2^{\mu_{i}} z_{i}^{\prime \prime}
+$$
+
+where $z_{i}^{\prime}, z_{i}^{\prime \prime}, \lambda_{i}$ and $\mu_{i}$ are known and the $z_{i}$ are the only unknowns. Clearly in the above representation of $y_{i}$ we are assuming
+
+$$
+0 \leq z_{i}^{\prime}<2^{\lambda_{i}}, 0 \leq z_{i}<X_{i}=2^{\mu_{i}-\lambda_{i}}, \lambda_{i}<\mu_{i} \text { and } 0 \leq z_{i}^{\prime \prime}
+$$
+
+By rearranging the Equations (2) we obtain equations in the $z_{i}$ given by
+
+
+\begin{equation*}
+z_{i}+s_{i} z_{0}+t_{i} \equiv 0 \quad(\bmod p) \text { for } i=1, \ldots, n \tag{3}
+\end{equation*}
+
+
+for some integers $s_{i}, t_{i} \in[0, \ldots, p-1]$.\\
+A random set of equations of this form would have solutions with $z_{i} \approx p$. But our set is not a random set since we know there is a solution with $z_{i}<X_{i}<p$. In the examples we consider the size of the $z_{i}$ could be as much as $p^{0.95}$, even so we know there is a solution which is smaller than one would expect from a random set of equations.
+
+We have reduced our problem to finding a 'small' solution to a set of modular equations. Since one would expect such 'small' solutions to be rare, one can hope\\
+that any solution to the above congruences, which is suitably small in some sense, will be precisely the small solution we require.
+
+To tackle this problem of finding a 'small' solution to the set of simultaneous linear equations we consider the lattice, $L$, generated by the rows of the following matrix:
+
+$$
+A=\left(\begin{array}{ccccc}
+-1 & s_{1} & s_{2} & \ldots & s_{n} \\
+0 & p & 0 & \cdots & 0 \\
+0 & 0 & p & & 0 \\
+\vdots & & & \ddots & \vdots \\
+0 & \ldots & \cdots & \cdots & p
+\end{array}\right) \in M_{(n+1),(n+1)}(\mathbb{Z})
+$$
+
+Hence $L=\left\{\mathbf{x} A: \mathbf{x} \in \mathbb{Z}^{n+1}\right\}$. Now consider the non-lattice vector given by
+
+$$
+\mathbf{t}=\left(0, t_{1}, t_{2}, \ldots, t_{n}\right) \in \mathbb{Z}^{n+1}
+$$
+
+By construction we know that there is a vector $\mathbf{x} \in \mathbb{Z}^{n+1}$ such that
+
+$$
+\mathbf{x} A-\mathbf{t}=\left(z_{0}, z_{1}, \ldots, z_{n}\right) \in \mathbb{Z}^{n+1}
+$$
+
+So there is a lattice vector, $\mathbf{x} A$, whose distance from the vector $\mathbf{t}$ is bounded by
+
+$$
+\|\mathbf{x} A-\mathbf{t}\|^{2} \leq \sum_{i=0}^{n} X_{i}^{2}
+$$
+
+In [1], Babai gives a polynomial time algorithm to find a closest lattice vector to a given non-lattice point. Suppose we first transform $A$ to an LLL-reduced basis represented by the rows of the matrix $B$. Let $\mathbf{b}_{i}^{*}$ denote the corresponding GramSchmidt basis derived from $B$ in the usual way. Babai proves the following theorem:
+
+Theorem 1 (Babai). In polynomial time, one can determine a lattice vector $\mathbf{w}$ which satisfies
+
+$$
+\|\mathbf{w}-\mathbf{t}\|^{2} \leq c_{1}\left\|\mathbf{b}_{n+1}^{*}\right\|^{2}
+$$
+
+for some constant $c_{1}$ depending on $n$.\\
+Heuristically we believe the vector size of $\left\|\mathbf{b}_{n+1}^{*}\right\|$ to be slightly larger than $\Delta^{1 /(n+1)}$, where $\Delta$ is the lattice determinant, say
+
+$$
+\left\|\mathbf{b}_{n+1}^{*}\right\| \leq c_{2} \Delta^{1 /(n+1)}
+$$
+
+for some constant, $c_{2}>1$, depending on $n$. In our case we have $\Delta=p^{n}$, so if
+
+$$
+\sum_{i=0}^{n} X_{i}^{2}<c_{1} c_{2} \Delta^{2 /(n+1)}=c_{1} c_{2} p^{2 n /(n+1)}
+$$
+
+then there is a good chance that Babai's algorithm will produce a lattice vector $\mathbf{w}$ such that
+
+$$
+\mathbf{w}-\mathbf{t}=\left(z_{0}, z_{1}, \ldots, z_{n}\right)
+$$
+
+We are making the heuristic assumption that if Babai's algorithm finds a lattice vector which is close enough to $\mathbf{t}$, then it will be the vector which corresponds to a solution to our original problem. This heuristic seems to be born out in practice, and is common in lattice arguments. We know, after all, that there exists a lattice vector which is closer to the vector $\mathbf{t}$ than one would expect from a purely random lattice. Such close vectors should be rare, so if Babai's algorithm finds a close lattice vector then it should be the one we are after.
+
+Notice that the above result of Babai is the theoretical bound derived from the definition of an LLL-reduced basis. It is well known that the LLL algorithm performs much better than one would expect from theory, so heuristically we hope that the constant $c_{1}$ in Babai's theorem should really be slightly larger than one and that the constant $c_{2}$ is at most $n$. Then, hopefully, the condition
+
+$$
+\max _{0 \leq i \leq n} X_{i}<p^{n /(n+1)}
+$$
+
+will be sufficient to derive the required solution to our problem.\\
+Even if it does not, we may obtain a vector which is close enough such that the resulting ephemeral keys are indistinguishable from the correct ephemeral keys. This last case would allow us to claim, by revealing the (bogus) ephemeral keys, that it was us and not the legitimate party which signed the original messages.
+
+On the other hand, Babai's algorithm may reveal a close vector which is not close enough for our purposes in that it may give rise to ephemeral keys which we can not use to pretend we sent the original messages. But as we argued above, if our heuristics hold, then such a situation should be very rare.
+
+To see what all this means in practice we make the simplifying assumption that the same number of bits of the $y_{i}$ are known, for all $i$. This is not necessary for the attack to work, but makes the following argument simpler, If the proportion of known bits is $\epsilon \in(0, \ldots, 1)$, then we have $X_{i}=p^{1-\epsilon}$. Our inequality then becomes
+
+$$
+p^{(1-\epsilon)}<p^{n /(n+1)}
+$$
+
+Hence,
+
+$$
+\epsilon>\frac{1}{n+1}
+$$
+
+So the more messages we use in our lattice attack then the smaller the number of known bits we need. However, the more messages we use, the larger the lattices and the more likely that our heuristic breaks down.
+
+\section*{3. Experimental Results}
+It remains to consider whether the above heuristic simplifications are sensible and are born out in practice. We implemented the above attack using C++ and the NTL library, [10], to perform the LLL reduction. Since the DSA mandates 160 bit values of $p$, to agree with the output length of the SHA-1 function, we chose a prime $p$ of 160 bits. We then generated sets of random equations such as those in Equation (3), such that the unknown values of $z_{i}$ are bounded by $p^{1-\epsilon}$. Our heuristic would imply that we would require
+
+$$
+n \approx 1 / \epsilon
+$$
+
+such equations to recover all the unknown variables.\\
+The following table indicates the range of applicability of our heuristic and the resulting algorithm: The times are averaged over a series of runs, for a prime of 160 bits. The actual value of $n$ is the value used which recovers the ephemeral keys, for the majority of the series of runs of the algorithm.
+
+\begin{center}
+\begin{tabular}{|r|r|r|r|}
+\hline
+ &  & \begin{tabular}{r}
+Actual Value \\
+of $n$ required \\
+\end{tabular} & \begin{tabular}{r}
+Time in \\
+Seconds \\
+\end{tabular} \\
+\hline
+.500 & 2 & 2 & 0.0102 \\
+.250 & 4 & 4 & 0.0360 \\
+.100 & 10 & 11 & 0.4428 \\
+.050 & 20 & 30 & 8.6970 \\
+.025 & 40 & - & Infeasible \\
+\hline
+\end{tabular}
+\end{center}
+
+The entry of 'Infeasible' means we could not find the keys with this value of $\epsilon$ with our implementation and the values of $n$ we attempted. Notice that $\epsilon=.025$, for a prime of 160 bits, means that only four bits of each ephemeral keys are known to the attacker. As we can see our heuristic is more accurate when a higher proportion of the bits are known, and so a smaller number of equations are needed. However, when $\epsilon=0.05$ we can mount a successful attack using very little computing resources, with only 8 bits known out of every 160 bits of ephemeral key and only 30 signed messages.
+
+\section*{4. Non-Contiguous blocks of bits}
+When the known bits of the ephemeral keys do not occur in one contiguous block, the lattice techniques still work with exactly the same theoretical bounds, although the time taken to find the remaining bits does increase. In this section we detail the necessary modifications to the original algorithm.
+
+We assume there are $d$ blocks of unknown bits in the private key $x$ and ephemeral keys $y_{i}$, i.e.
+
+$$
+x=x^{\prime}+\sum_{j=1}^{d} x_{j} 2^{\lambda_{j}}, \text { and } y_{i}=y_{i}^{\prime}+\sum_{j=1}^{d} y_{i, j} 2^{\lambda_{i, j}},
+$$
+
+for some unknown positive integers $x_{i}, y_{i, j}$ such that
+
+$$
+x_{j}<X_{j}<2^{\lambda_{j+1}-\lambda_{j}} \text { and } y_{i, j}<Y_{i, j}<2^{\lambda_{i, j+1}-\lambda_{i, j}}
+$$
+
+and for known integers $x^{\prime}$ and $y_{i}^{\prime}$. We further restrict ourselves to the case when the number of unknown bits in $x$ and the $y_{i}$ is approximately the same, i.e. for all $1 \leq i \leq h$ we have the following:
+
+$$
+\prod_{j=1}^{d} X_{j} \approx \prod_{j=1}^{d} Y_{i, j} \approx p^{1-\epsilon}
+$$
+
+Using the same transformations as in Section 2 we let $z_{i, j}$, for $i=0, \ldots, n$ and $j=1, \ldots, t$, denote our unknown quantities and write our system of equations as
+
+$$
+z_{i, 1}+\sum_{j=2}^{d} s_{i, j} z_{i, j}+\sum_{j=1}^{d} r_{i, j} z_{0, j}+t_{i} \equiv 0 \quad(\bmod p) \text { for } i=1, \ldots, n .
+$$
+
+In terms of the unknowns $z_{i, j}$ we assume their respective bounds, $Z_{i, j} \in \mathbb{Z}$, satisfy
+
+$$
+\prod_{j=1}^{d} Z_{i, j} \approx p^{1-\epsilon}
+$$
+
+for each $i=0, \ldots, n$. Set $J_{i, j}=J / Z_{i, j} \in \mathbb{Z}$, for all $i$ and $j$, where
+
+$$
+J=\prod_{\substack{0 \leq i \leq n \\ 1 \leq j \leq d}} Z_{i, j} \simeq p^{(1-\epsilon)(n+1)}
+$$
+
+These quantities will be used to weight our lattice so as to take into account variations in the size of the $Z_{i, j}$. Let $I_{l}$ denote the identity matrix of dimension $l$ and consider the lattice, $L$, generated by the rows of the following matrix:
+
+$$
+B=\left(\begin{array}{c|c}
+-I_{d(n+1)-n} & R^{t} \\
+S \\
+\hline 0 & -p I_{n}
+\end{array}\right) \times D
+$$
+
+where $R=\left(r_{i, j}\right)$ and $S$ denotes the matrix
+
+$$
+S=\left(\begin{array}{ccc}
+\mathbf{s}_{1} & & 0 \\
+& \ddots & \\
+0 & & \mathbf{s}_{n}
+\end{array}\right) \in M_{n(d-1), n}(\mathbb{Z})
+$$
+
+with $\mathbf{s}_{i}$ denoting the column vector given by $\left(s_{i, j}\right)_{j=2}^{d}$. The matrix $D$ is the diagonal matrix given by
+
+$$
+\begin{aligned}
+D & =\operatorname{diag}\left(J_{0,1}, \ldots, J_{0, d}, J_{1,2}, \ldots, J_{1, d}, \ldots, J_{n, 2}, \ldots, J_{n, d}, J_{1,1}, \ldots, J_{n, 1}\right) \\
+& =\operatorname{diag}(\mathbf{j})
+\end{aligned}
+$$
+
+If we consider the non-lattice vector given by
+
+$$
+\mathbf{t}=\left(0, \ldots, 0, t_{1} J_{1,1}, \ldots, t_{n} J_{n, 1}\right),
+$$
+
+then we know there exists a vector $\mathbf{x} \in \mathbb{Z}^{d(n+1)}$ such that
+
+$$
+\mathbf{x} B-\mathbf{t}=\left(z_{0,1}, \ldots, z_{0, d}, z_{1,2}, \ldots, z_{1, d}, \ldots, z_{n, 2}, \ldots, z_{n, d}, z_{1,1}, \ldots, z_{n, 1}\right) \cdot \mathbf{j}
+$$
+
+By the choice of weights we have used, every entry in the right hand vector has size around $J$. We then use Babai's algorithm to find a lattice vector, w, close to the vector $\mathbf{t}$. Hopefully we will obtain $\mathbf{w}=\mathbf{x} B$.
+
+Since
+
+$$
+\operatorname{det}(B)=p^{n} \prod_{\substack{0 \leq i \leq n \\ 1 \leq j \leq d}} J_{i, j}=p^{n} J^{d(n+1)} \prod_{\substack{0 \leq i \leq n \\ 1 \leq j \leq d}} Z_{i, j}^{-1}=p^{n} J^{d(n+1)-1}
+$$
+
+in order to satisfy the criteria of Theorem 1 (under the same heuristic assumptions of Section 2) we wish the to ensure that
+
+$$
+J<\operatorname{det}(B)^{1 / d(n+1)} .
+$$
+
+But $J \simeq p^{(1-\epsilon)(n+1)}$, hence we obtain
+
+$$
+(1-\epsilon)(n+1) \leq \frac{1}{d(n+1)}(n+(1-\epsilon)(n+1)(d(n+1)-1)) .
+$$
+
+In other words
+
+$$
+\epsilon>\frac{1}{n+1}
+$$
+
+which can be seen to be the same bound as in the contiguous case.\\
+Even though the same theoretical bound on $\epsilon$ is reached, in practice the noncontiguous case is harder to solve. This is due to the fact that the increased dimension of the lattice to reduce both increases the time for LLL-reduction whilst decreasing the chances of the heuristics holding.
+
+We ran some experiments, setting $Z_{i, j}=p^{(1-\epsilon) / d}$ and obtained the following results, again using a 160 bit prime number $p$;
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+$d$ & $\epsilon$ & $1 / \epsilon$ & Actual Value of $n$ & Time in Seconds \\
+\hline
+2 & . 500 & 2 & 2 & 0.067 \\
+\hline
+4 & . 500 & 2 & 2 & 0.304 \\
+\hline
+8 & . 500 & 2 & 2 & 1.135 \\
+\hline
+16 & . 500 & 2 & - & Infeasible \\
+\hline
+2 & . 250 & 4 & 4 & 0.393 \\
+\hline
+4 & . 250 & 4 & 4 & 1.785 \\
+\hline
+8 & . 250 & 4 & - & Infeasible \\
+\hline
+2 & . 100 & 10 & 12 & 6.256 \\
+\hline
+4 & . 100 & 10 & - & Infeasible \\
+\hline
+2 & . 050 & 20 & - & Infeasible \\
+\hline
+\end{tabular}
+\end{center}
+
+Hence as $\epsilon$ decreases we could only use fewer numbers of blocks to still recover the keys. This is because as $\epsilon$ decreases and $d$ increases we obtain larger and larger matrices.
+
+\section*{5. Conclusions}
+We have shown how to use lattice methods to break digital signature algorithms when small numbers of bits of many ephemeral keys are known. It goes without saying that our attack also applies when a large number of bits are known of a small number of ephemeral keys. Our attack relies on solving the many equations which arise in the multiple calls to the digital signature algorithm, rather than any underlying weaknesses of the discrete $\log$ problem or the choice of group. We have shown that in designing implementations in hardware or software of digital signature algorithms it is important that no bits of the ephemeral keys are leaked for whatever reason.
+
+\section*{References}
+[1] L. Babai, On Lovász lattice reduction and the nearest point problem. Combinatorica, 6, 1-13, 1986.\\[0pt]
+[2] D. Boneh and G. Durfee, Cryptanalysis of RSA with private key of less than $N^{0.292}$. Advances in Cryptology, EUROCRYPT' '99, editor J. Stern. Springer-Verlag, LNCS 1592, 1-11, 1999.\\[0pt]
+[3] D. Boneh and R. Venkatesan, Hardness of computing the most significant bits of secret keys in Diffie-Hellman and related schemes. Advances in Cryptology, CRYPTO '96, editor N. Koblitz, Springer-Verlag, LNCS 1109, 129-142, 1996.\\[0pt]
+[4] D. Coppersmith, Finding a small root of a bivariate integer equation; factoring with high bits known. Advances in Cryptology, EUROCRYPT' '96, editor U. Maurer, Springer-Verlag, LNCS 1070, 178-189, 1996.\\[0pt]
+[5] D. Coppersmith, Small solutions to polynomial equations, and low exponent RSA vulnerabilities. J. of Cryptology, 10, 233-260, 1997.\\[0pt]
+[6] T. ElGamal, A public-key cryptosystem and a signature scheme based on discrete logarithms IEEE Trans. Inform. Theory, 31, 469-472, 1985.\\[0pt]
+[7] N. Howgrave-Graham, Finding small roots of univariate modular equations revisited. Proc. of Cryptography and Coding, Springer-Verlag, LNCS 1355, 131-142, 1997.\\[0pt]
+[8] N. Howgrave-Graham, Computational mathematics inspired by RSA. PhD. Thesis, University of Bath, 1999.\\[0pt]
+[9] A.K. Lenstra, H.W. Lenstra and L. Lovász, Factoring polynomials with rational coefficients. Math. Ann., 261, 515-534, 1982.\\[0pt]
+[10] V. Shoup, NTL: A Library for doing Number Theory \href{http://www.shoup.net/}{http://www.shoup.net/}
+
+Hewlett-Packard Laboratories, Filton Road, Stoke Gifford, Bristol, BS12 6QZ, United Kingdom
+
+E-mail address: \href{mailto:nichow@hplb.hpl.hp.com}{nichow@hplb.hpl.hp.com}\\
+Hewlett-Packard Laboratories, Filton Road, Stoke Gifford, Bristol, BS12 6QZ, United Kingdom
+
+E-mail address: \href{mailto:nigel_smart@hpl.hp.com}{nigel\_smart@hpl.hp.com}
+
+\end{document}

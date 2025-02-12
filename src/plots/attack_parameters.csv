@@ -1,0 +1,2 @@
+EMIN ; EMAX ; ENB ; NMIN ; NMAX ; NSTEP ; p_q ; ALGO
+0.010 ; 0.1 ; 10 ; 3 ; 8 ; 2 ; 1024_160 ; fast

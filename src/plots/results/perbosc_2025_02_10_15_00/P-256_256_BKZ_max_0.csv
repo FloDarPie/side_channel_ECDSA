@@ -1,0 +1,2 @@
+epsilon ; nb messages ; time (sec) ; correct
+0.05 ; 26 ; 1.0650086402893066 ; True
